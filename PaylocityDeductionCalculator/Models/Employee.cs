@@ -12,25 +12,44 @@ namespace PaylocityDeductionCalculator.Models
         public decimal PaycheckAmount { get; set; }
         public int NumPayPeriods { get; set; }
 
+
         public Employee()
         {
-            Dependents = new List<Dependent>();
-
+            
         }
 
         public void AddDependent(Dependent dependent)
         {
+            if(Dependents == null)
+            {
+                Dependents = new List<Dependent>();
+            }
             Dependents.Add(dependent);
         }
 
         public void RemoveDependent(Dependent dependent)
         {
-            Dependents.Remove(dependent);
+            try {
+
+                Dependents.Remove(dependent);
+
+            }
+            catch
+            {
+
+            }
+            
         }
 
         public void RemoveDependentAt(int i)
         {
-            Dependents.RemoveAt(i);
+            try
+            {
+                Dependents.RemoveAt(i);
+            }catch
+            {
+
+            }
         }
 
         public void RemoveAllDependents()
@@ -43,7 +62,35 @@ namespace PaylocityDeductionCalculator.Models
             return PaycheckAmount * NumPayPeriods;
         }
 
+        public decimal GetAnnualDeductions()
+        {
+            decimal annualDeductions = UnitPrice;
+            foreach(Dependent dependent in Dependents)
+            {
+                annualDeductions += dependent.UnitPrice;
+            }
+            return annualDeductions;
+        }
 
+        public decimal GetAnnualNet()
+        {
+            return GetAnnualSalary() - GetAnnualDeductions();
+        }
+
+        public decimal GetPaycheckGross()
+        {
+            return PaycheckAmount;
+        }
+
+        public decimal GetPaycheckDeductions()
+        {
+            return GetAnnualDeductions() / NumPayPeriods;
+        }
+
+        public decimal GetPaycheckNet()
+        {
+            return GetPaycheckGross() - GetPaycheckDeductions();
+        }
 
         
     }

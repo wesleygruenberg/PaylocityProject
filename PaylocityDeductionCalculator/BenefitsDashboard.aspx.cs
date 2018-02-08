@@ -13,7 +13,7 @@ namespace PaylocityDeductionCalculator
     public partial class BenefitsDashboard : System.Web.UI.Page
     {
 
-        private static BusinessLogic calculator;
+        private static BusinessLogic session;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -23,7 +23,7 @@ namespace PaylocityDeductionCalculator
             {
                 ModDependentsDiv.Visible = false;
                 Summary_Container.Visible = false;
-                calculator = new Models.BusinessLogic();
+                session = new Models.BusinessLogic();
                 EE_Info_Div.Attributes.CssStyle.Add("opacity", "0.9");
             }
 
@@ -37,7 +37,7 @@ namespace PaylocityDeductionCalculator
 
         public List<Benefactor> LoadGridView()
         {
-            return calculator.GetBenefactorsList();
+            return session.GetBenefactorsList();
         
         }
 
@@ -50,8 +50,8 @@ namespace PaylocityDeductionCalculator
 
         protected void Restart_Button_Click(object sender, EventArgs e)
         {
-            calculator = null;
-            calculator = new BusinessLogic();
+            session = null;
+            session = new BusinessLogic();
             EE_First_TextBox.Text = "";
             EE_Last_TextBox.Text = "";
 
@@ -87,7 +87,7 @@ namespace PaylocityDeductionCalculator
             }
             else
             {
-                calculator.InitializeEmployee(First, Last);
+                session.InitializeEmployee(First, Last);
                 
                 
                 EE_First_TextBox.Enabled = false;
@@ -124,7 +124,7 @@ namespace PaylocityDeductionCalculator
             }
             else
             {
-                calculator.AddDependent(firstName, lastName);
+                session.AddDependent(firstName, lastName);
 
                 RemoveDependent_Button.Enabled = true;
                 UpdateListBox();
@@ -146,7 +146,7 @@ namespace PaylocityDeductionCalculator
                 {
                     if (Dependents_ListBox.Items[i].Selected)
                     {
-                        calculator.RemoveDependentAt(i);
+                        session.RemoveDependentAt(i);
              
                     }
                 }
@@ -157,7 +157,7 @@ namespace PaylocityDeductionCalculator
        
             }
 
-            if (calculator.GetDependentCount() <= 0)
+            if (session.GetDependentCount() <= 0)
             {
                 RemoveDependent_Button.Enabled = false;
             }
@@ -176,8 +176,8 @@ namespace PaylocityDeductionCalculator
             {
                
                 e.Row.Cells[0].Text = "TOTALS:";
-                e.Row.Cells[1].Text = "" + calculator.TotalAnnualPrice.ToString("C");
-                e.Row.Cells[2].Text = "" + calculator.TotalPaycheckPrice.ToString("C");
+                e.Row.Cells[1].Text = "" + session.GetAnnualDeductions().ToString("C");
+                e.Row.Cells[2].Text = "" + session.GetPaycheckDeductions().ToString("C");
 
 
             }
@@ -198,11 +198,11 @@ namespace PaylocityDeductionCalculator
         private void SetDefaultPayInfo()
         {
 
-            PayAmount_TB.Text = calculator.GetPaycheckAmount().ToString("C");
-            NumPeriods_TB.Text = calculator.GetNumPayPeriods().ToString();
-            EECost_TB.Text = calculator.GetEmployeeCost().ToString("C");
-            DepCost_TB.Text = calculator.GetDependentCost().ToString("C");
-            Discount1_TB.Text = calculator.GetDiscount().ToString("P");
+            PayAmount_TB.Text = session.GetPaycheckAmount().ToString("C");
+            NumPeriods_TB.Text = session.GetNumPayPeriods().ToString();
+            EECost_TB.Text = session.GetEmployeeCost().ToString("C");
+            DepCost_TB.Text = session.GetDependentCost().ToString("C");
+            Discount1_TB.Text = session.GetDiscount().ToString("P");
 
             PayAmount_TB.Enabled = false;
             NumPeriods_TB.Enabled = false;
@@ -249,15 +249,15 @@ namespace PaylocityDeductionCalculator
 
         private void UpdateSummary()
         {
-            if (calculator.isEmployeeSet())
+            if (session.isEmployeeSet())
             {
-                GrossSalary_Label.Text = calculator.GetEmployeeSalary().ToString("C");
-                AnnualDeductions_Label.Text = calculator.TotalAnnualPrice.ToString("C");
-                AnnualTakehome_Label.Text = calculator.TotalAnnualTakehome.ToString("C");
+                GrossSalary_Label.Text = session.GetAnnualGross().ToString("C");
+                AnnualDeductions_Label.Text = session.GetAnnualDeductions().ToString("C");
+                AnnualTakehome_Label.Text = session.GetAnnualNet().ToString("C");
 
-                GrossPayPeriod_Label.Text = calculator.GetPaycheckAmount().ToString("C");
-                PayPeriodDeductions_Label.Text = calculator.TotalPaycheckPrice.ToString("C");
-                PayPeriodTakehome_Label.Text = calculator.TotalPaycheckTakehome.ToString("C");
+                GrossPayPeriod_Label.Text = session.GetPaycheckGross().ToString("C");
+                PayPeriodDeductions_Label.Text = session.GetPaycheckDeductions().ToString("C");
+                PayPeriodTakehome_Label.Text = session.GetPaycheckNet().ToString("C");
             }
 
             CartList.DataSource = LoadGridView();
@@ -268,7 +268,7 @@ namespace PaylocityDeductionCalculator
         private void UpdateListBox()
         {
             Dependents_ListBox.DataSource = null;
-            Dependents_ListBox.DataSource = calculator.GetDependentsList();
+            Dependents_ListBox.DataSource = session.GetDependentsList();
             Dependents_ListBox.DataBind();
         }
 

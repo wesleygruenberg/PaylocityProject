@@ -14,20 +14,11 @@ namespace PaylocityDeductionCalculator.Models
         private const decimal Paycheck = 2000.00m;
 
         private Employee employee;
-
-        public decimal TotalAnnualPrice { get; set; }
-        public decimal TotalPaycheckPrice { get; set; }
-        public decimal TotalAnnualTakehome { get; set; }
-        public decimal TotalPaycheckTakehome { get; set; }
-
-        
+      
 
         public BusinessLogic()
         {
-            this.TotalAnnualPrice = 0.00m;
-            this.TotalPaycheckPrice = 0.00m;
-            this.TotalAnnualTakehome = 0.00m;
-            this.TotalPaycheckTakehome = 0.00m;
+           
 
         }
 
@@ -84,7 +75,7 @@ namespace PaylocityDeductionCalculator.Models
         public List<Dependent> GetDependentsList()
         {
 
-            return null;
+            return employee.Dependents;
         }
 
         public List<Benefactor> GetBenefactorsList()
@@ -110,9 +101,34 @@ namespace PaylocityDeductionCalculator.Models
             return employee.Dependents.Count;
         }
 
-        public decimal GetEmployeeSalary()
+        public decimal GetAnnualGross()
         {
             return employee.GetAnnualSalary();
+        }
+
+        public decimal GetAnnualDeductions()
+        {
+            return employee.GetAnnualDeductions();
+        }
+
+        public decimal GetAnnualNet()
+        {
+            return employee.GetAnnualNet();
+        }
+
+        public decimal GetPaycheckGross()
+        {
+            return employee.GetPaycheckGross();
+        }
+
+        public decimal GetPaycheckDeductions()
+        {
+            return employee.GetPaycheckDeductions();
+        }
+
+        public decimal GetPaycheckNet()
+        {
+            return employee.GetPaycheckNet();
         }
 
         public decimal GetDiscount()
@@ -151,15 +167,6 @@ namespace PaylocityDeductionCalculator.Models
             return isSet;
         }
 
-        public void ResetTotals()
-        {
-
-            TotalAnnualPrice = 0.00m;
-            TotalPaycheckPrice = 0.00m;
-            TotalAnnualTakehome = 0.00m;
-            TotalPaycheckTakehome = 0.00m;
-
-        }
 
         private decimal CalculatePeriodPrice(decimal UnitPrice)
         {
