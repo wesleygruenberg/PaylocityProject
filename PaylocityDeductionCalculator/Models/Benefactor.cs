@@ -17,6 +17,8 @@ namespace PaylocityDeductionCalculator.Models
             get; set;
         }
 
+
+
         public override string ToString()
         {
             // choose any format that suits you and display what you like

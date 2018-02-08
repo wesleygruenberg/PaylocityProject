@@ -229,13 +229,13 @@ namespace PaylocityDeductionCalculator {
         protected global::System.Web.UI.WebControls.TextBox DepLast_TextBox;
         
         /// <summary>
-        /// Dep_Error_Label control.
+        /// DependentError_Label control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Dep_Error_Label;
+        protected global::System.Web.UI.WebControls.Label DependentError_Label;
         
         /// <summary>
         /// AddDependent_Button control.
@@ -247,13 +247,13 @@ namespace PaylocityDeductionCalculator {
         protected global::System.Web.UI.WebControls.Button AddDependent_Button;
         
         /// <summary>
-        /// ListBox1 control.
+        /// Dependents_ListBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ListBox ListBox1;
+        protected global::System.Web.UI.WebControls.ListBox Dependents_ListBox;
         
         /// <summary>
         /// RemoveDependent_Button control.

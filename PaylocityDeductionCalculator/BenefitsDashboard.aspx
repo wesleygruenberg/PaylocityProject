@@ -10,11 +10,6 @@
     </head>
 
     <body>
-
-
-
-
-        
             <form id="form1" runat="server">
                 <header class="page-header">
                     <a id="logo" href="BenefitsDashboard.aspx"> 
@@ -85,12 +80,12 @@
                                 <asp:Label ID="LastNameLabel0" runat="server" Text="Last Name: " Width="100px"></asp:Label>
                                 <asp:TextBox ID="DepLast_TextBox" runat="server"></asp:TextBox>
                                 <br />
-                                <asp:Label ID="Dep_Error_Label" runat="server" CssClass="alert-warning"></asp:Label>
+                                <asp:Label ID="DependentError_Label" runat="server" CssClass="alert-warning"></asp:Label>
                                 <br />
                                 <asp:Button ID="AddDependent_Button" runat="server" OnClick="AddDependent_Button_Click" Text="Add Dependent" Width="134px" Enabled="False" />
                                 <br />
                                 <br />
-                                <asp:ListBox ID="ListBox1" runat="server" Height="119px" ItemType="Dependent" Width="273px" Enabled="False"></asp:ListBox>
+                                <asp:ListBox ID="Dependents_ListBox" runat="server" Height="119px" ItemType="Dependent" Width="273px" Enabled="False"></asp:ListBox>
                                 <br />
                                 <br />
                                 <asp:Button ID="RemoveDependent_Button" runat="server" OnClick="RemoveDependent_Button_Click" Text="Remove Dependent" Enabled="False" />
