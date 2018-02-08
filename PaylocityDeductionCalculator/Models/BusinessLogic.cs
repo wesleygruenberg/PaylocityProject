@@ -25,8 +25,7 @@ namespace PaylocityDeductionCalculator.Models
         public void InitializeEmployee(string firstName, string lastName)
         {
             decimal discount = CalculateDiscount(firstName, lastName);
-            decimal unitPrice = CalculateUnitPrice(EmployeeCost, discount);
-            decimal periodPrice = CalculatePeriodPrice(unitPrice);
+            
 
             employee = new Models.Employee
             {
@@ -36,29 +35,25 @@ namespace PaylocityDeductionCalculator.Models
                 PaycheckAmount = this.GetPaycheckAmount(),
                 NumPayPeriods = this.GetNumPayPeriods(),
                 Discount = discount,
-                UnitPrice = unitPrice,
-                PeriodPrice = periodPrice
-
+                UnitPrice = EmployeeCost
             };
+            employee.UpdatePrices();
 
         }
 
         public void AddDependent(string firstName, string lastName)
         {
             decimal discount = CalculateDiscount(firstName, lastName);
-            decimal unitPrice = CalculateUnitPrice(DependentCost, discount);
-
-
+           
             Dependent dependent = new Dependent
             {
                 FirstName = firstName,
                 LastName = lastName,
-                Discount = discount,
-                UnitPrice = unitPrice,
-                PeriodPrice = CalculatePeriodPrice(unitPrice)
-
+                Discount = CalculateDiscount(firstName, lastName),
+                NumPayPeriods = this.GetNumPayPeriods(),
+                UnitPrice = DependentCost           
             };
-
+            dependent.UpdatePrices();
             employee.AddDependent(dependent);
         }
 
@@ -164,7 +159,18 @@ namespace PaylocityDeductionCalculator.Models
         {
             return employee.FirstName + " " + employee.LastName;
         }
-        public Boolean isEmployeeSet()
+
+        public void SetEmployeeName(string firstName, string lastName)
+        {
+            employee.FirstName = firstName;
+            employee.LastName = lastName;
+
+            employee.Discount = CalculateDiscount(firstName, lastName);
+
+
+        }
+
+        public Boolean IsEmployeeSet()
         {
             Boolean isSet = false;
             if (employee != null)

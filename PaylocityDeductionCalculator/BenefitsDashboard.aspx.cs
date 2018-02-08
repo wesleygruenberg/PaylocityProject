@@ -19,7 +19,7 @@ namespace PaylocityDeductionCalculator
         {
            
             
-            if(session == null || !session.isEmployeeSet())
+            if(session == null || !session.IsEmployeeSet())
             {
                 EnableEmployeePanel();
                 DisableDependentsPanel();
@@ -69,7 +69,15 @@ namespace PaylocityDeductionCalculator
             }
             else
             {
-                session.InitializeEmployee(First, Last);
+                if (!session.IsEmployeeSet())
+                {
+                    session.InitializeEmployee(First, Last);                    
+                }
+                else
+                {
+                    session.SetEmployeeName(First, Last);
+                }
+
                 DisableEmployeePanel();
                 EnableDependentsPanel();
                 EnableSummaryPanel();
@@ -217,8 +225,8 @@ namespace PaylocityDeductionCalculator
 
         private void ClearDependentNameBoxes()
         {
-            DepFirst_TextBox.Text = "";
-            DepLast_TextBox.Text = "";
+            DependentFirst_TextBox.Text = "";
+            DependentLast_TextBox.Text = "";
         }
 
         private void ClearEmployeeBoxes()
@@ -231,7 +239,7 @@ namespace PaylocityDeductionCalculator
 
         private void UpdateSummaryPanel()
         {
-            if (session.isEmployeeSet())
+            if (session.IsEmployeeSet())
             {
 
                 Summary_Header.InnerText = "Summary for " + session.GetEmployeeName();
@@ -293,8 +301,8 @@ namespace PaylocityDeductionCalculator
         private void EnableDependentsPanel()
         {
             ModDependentsDiv.Visible = true;
-            DepFirst_TextBox.Enabled = true;
-            DepLast_TextBox.Enabled = true;
+            DependentFirst_TextBox.Enabled = true;
+            DependentLast_TextBox.Enabled = true;
             Dependents_ListBox.Enabled = true;
             AddDependent_Button.Enabled = true;
             
@@ -303,8 +311,8 @@ namespace PaylocityDeductionCalculator
         private void DisableDependentsPanel()
         {
             ModDependentsDiv.Visible = false;
-            DepFirst_TextBox.Enabled = false;
-            DepLast_TextBox.Enabled = false;
+            DependentFirst_TextBox.Enabled = false;
+            DependentLast_TextBox.Enabled = false;
             Dependents_ListBox.Enabled = false;
             AddDependent_Button.Enabled = false;
         }

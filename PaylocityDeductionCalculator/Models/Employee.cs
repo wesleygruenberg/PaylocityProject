@@ -10,7 +10,7 @@ namespace PaylocityDeductionCalculator.Models
 
         public List<Dependent> Dependents { get; set; }
         public decimal PaycheckAmount { get; set; }
-        public int NumPayPeriods { get; set; }
+        
 
 
         public Employee()
@@ -64,10 +64,10 @@ namespace PaylocityDeductionCalculator.Models
 
         public decimal GetAnnualDeductions()
         {
-            decimal annualDeductions = UnitPrice;
+            decimal annualDeductions = GetAnnualPrice();
             foreach(Dependent dependent in Dependents)
             {
-                annualDeductions += dependent.UnitPrice;
+                annualDeductions += dependent.GetAnnualPrice();
             }
             return annualDeductions;
         }
