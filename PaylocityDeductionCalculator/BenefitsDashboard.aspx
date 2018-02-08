@@ -74,11 +74,15 @@
                             <h2>Now add any dependents</h2>
                             <section>
 
+                                <asp:Button ID="EditEmployeeInfo_Button" runat="server" OnClick="EditEmployeeInfo_Button_Click" Text="Edit Employee Information" />
+                                <br />
+                                <br />
+
                                 <asp:Label ID="FirstNameLabel0" runat="server" Text="First Name: " Width="100px"></asp:Label>
-                                <asp:TextBox ID="DepFirst_TextBox" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="DependentFirst_TextBox" runat="server"></asp:TextBox>
                                 <br />
                                 <asp:Label ID="LastNameLabel0" runat="server" Text="Last Name: " Width="100px"></asp:Label>
-                                <asp:TextBox ID="DepLast_TextBox" runat="server"></asp:TextBox>
+                                <asp:TextBox ID="DependentLast_TextBox" runat="server"></asp:TextBox>
                                 <br />
                                 <asp:Label ID="DependentError_Label" runat="server" CssClass="alert-warning"></asp:Label>
                                 <br />
@@ -89,6 +93,7 @@
                                 <br />
                                 <br />
                                 <asp:Button ID="RemoveDependent_Button" runat="server" OnClick="RemoveDependent_Button_Click" Text="Remove Dependent" Enabled="False" />
+                                <asp:Button ID="RemoveAllDependents_Button" runat="server" Enabled="False" OnClick="RemoveAllDependents_Button_Click" Text="Remove All" />
                                 <br />
 
                             </section>
@@ -131,16 +136,27 @@
                         </section>
                         <br />
                         <section>
-                            <asp:GridView ID="CartList" runat="server" AutoGenerateColumns="false" ShowFooter="True" GridLines="Vertical" EmptyDataText="There is nothing in your shopping cart." CellPadding="4" onrowdatabound="CartList_RowDataBound" CssClass="table table-striped table-bordered">
+                            <asp:GridView ID="CartList" 
+                                runat="server" 
+                                AutoGenerateColumns="false" 
+                                ShowFooter="True" 
+                                GridLines="Vertical" 
+                                EmptyDataText="There is nothing in your shopping cart." 
+                                CellPadding="4" onrowdatabound="CartList_RowDataBound" 
+                                CssClass="table table-striped table-bordered">
+                                <HeaderStyle HorizontalAlign="Left" BackColor="#3D7169" ForeColor="#FFFFFF" />
+                                <FooterStyle HorizontalAlign="Right" BackColor="#6C6B66" ForeColor="#FFFFFF" />
+                                <AlternatingRowStyle BackColor="#F8F8F8" />
+                                <RowStyle BackColor="LightGray" />
                                 <Columns>
                                     <asp:TemplateField HeaderText="Benefactor Name">
                                         <ItemTemplate>
                                             <%# Eval("FirstName") + " " + Eval("LastName") %>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-
+                                    <asp:BoundField DataField="Discount" HeaderText ="Discount Applied" DataFormatString="{0:p}" />
                                     <asp:BoundField DataField="UnitPrice" HeaderText="Annual Price" DataFormatString="{0:c}" />
-
+                                    
                                     <asp:BoundField DataField="PeriodPrice" HeaderText="Paycheck Deduction" DataFormatString="{0:c}" />
 
                                 </Columns>

@@ -72,6 +72,11 @@ namespace PaylocityDeductionCalculator.Models
             employee.RemoveDependentAt(i);
         }
 
+        public void RemoveAllDependents()
+        {
+            employee.RemoveAllDependents();
+        }
+
         public List<Dependent> GetDependentsList()
         {
 
@@ -155,7 +160,10 @@ namespace PaylocityDeductionCalculator.Models
         {
             return NumPayPeriods;
         }
-
+        public string GetEmployeeName()
+        {
+            return employee.FirstName + " " + employee.LastName;
+        }
         public Boolean isEmployeeSet()
         {
             Boolean isSet = false;

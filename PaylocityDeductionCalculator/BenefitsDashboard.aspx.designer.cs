@@ -193,6 +193,15 @@ namespace PaylocityDeductionCalculator {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl ModDependentsDiv;
         
         /// <summary>
+        /// EditEmployeeInfo_Button control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button EditEmployeeInfo_Button;
+        
+        /// <summary>
         /// FirstNameLabel0 control.
         /// </summary>
         /// <remarks>
@@ -202,13 +211,13 @@ namespace PaylocityDeductionCalculator {
         protected global::System.Web.UI.WebControls.Label FirstNameLabel0;
         
         /// <summary>
-        /// DepFirst_TextBox control.
+        /// DependentFirst_TextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DepFirst_TextBox;
+        protected global::System.Web.UI.WebControls.TextBox DependentFirst_TextBox;
         
         /// <summary>
         /// LastNameLabel0 control.
@@ -220,13 +229,13 @@ namespace PaylocityDeductionCalculator {
         protected global::System.Web.UI.WebControls.Label LastNameLabel0;
         
         /// <summary>
-        /// DepLast_TextBox control.
+        /// DependentLast_TextBox control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox DepLast_TextBox;
+        protected global::System.Web.UI.WebControls.TextBox DependentLast_TextBox;
         
         /// <summary>
         /// DependentError_Label control.
@@ -263,6 +272,15 @@ namespace PaylocityDeductionCalculator {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button RemoveDependent_Button;
+        
+        /// <summary>
+        /// RemoveAllDependents_Button control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button RemoveAllDependents_Button;
         
         /// <summary>
         /// Summary_Container control.

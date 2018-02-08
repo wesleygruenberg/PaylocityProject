@@ -13,63 +13,45 @@ namespace PaylocityDeductionCalculator
     public partial class BenefitsDashboard : System.Web.UI.Page
     {
 
-        private static BusinessLogic session;
+        private static BusinessLogic session = null;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            //Wipe out old info and hide divs if employee name boxes are empty
+           
             
-            if(EE_Last_TextBox.Text== "" || EE_First_TextBox.Text ==  "")
+            if(session == null || !session.isEmployeeSet())
             {
-                ModDependentsDiv.Visible = false;
-                Summary_Container.Visible = false;
+                EnableEmployeePanel();
+                DisableDependentsPanel();
+                DisableSummaryPanel();                
                 session = new Models.BusinessLogic();
-                EE_Info_Div.Attributes.CssStyle.Add("opacity", "0.9");
             }
 
             SetDefaultPayInfo();
-            UpdateSummary();
+            UpdateSummaryPanel();
             
         }
-
-
-
 
         public List<Benefactor> LoadGridView()
         {
             return session.GetBenefactorsList();
-        
         }
-
-
+        
         #region event handlers
         ////////////////////////////////
         /// EVENT HANDLERS /////////////
         ////////////////////////////////
 
-
         protected void Restart_Button_Click(object sender, EventArgs e)
         {
             session = null;
             session = new BusinessLogic();
-            EE_First_TextBox.Text = "";
-            EE_Last_TextBox.Text = "";
-
-            EE_First_TextBox.Enabled = true;
-            EE_Last_TextBox.Enabled = true;
-            EE_Error_Label.Text = "";
-
-            ModDependentsDiv.Visible = false;
-            DepFirst_TextBox.Enabled = false;
-            DepLast_TextBox.Enabled = false;
-            Dependents_ListBox.Enabled = false;
-            AddDependent_Button.Enabled = false;
-            Summary_Container.Visible = false;
-            Summary_Header.InnerText = "Summary";
-
-            EE_Info_Div.Attributes.CssStyle.Add("opacity", "0.9");
-
-            UpdateSummary();
+     
+            ResetEmployeePanel();
+            EnableEmployeePanel();
+            DisableDependentsPanel();
+            DisableSummaryPanel();
+            UpdateSummaryPanel();
 
 
         }
@@ -88,36 +70,25 @@ namespace PaylocityDeductionCalculator
             else
             {
                 session.InitializeEmployee(First, Last);
-                
-                
-                EE_First_TextBox.Enabled = false;
-                EE_Last_TextBox.Enabled = false;
-                EE_Error_Label.Text = "";
-
-                Summary_Container.Visible = true;
-                ModDependentsDiv.Visible = true;
-                DepFirst_TextBox.Enabled = true;
-                DepLast_TextBox.Enabled = true;
-                Dependents_ListBox.Enabled = true;
-                AddDependent_Button.Enabled = true;
-                Summary_Header.InnerText = "Summary for " + First + " " + Last;
-
-                EE_Info_Div.Attributes.CssStyle.Add("opacity", "0.50");
-
-
-                UpdateSummary();
+                DisableEmployeePanel();
+                EnableDependentsPanel();
+                EnableSummaryPanel();
+                UpdateSummaryPanel();
             }
 
         }
 
+        protected void EditEmployeeInfo_Button_Click(object sender, EventArgs e)
+        {
+            EnableEmployeePanel();
+        }
 
         protected void AddDependent_Button_Click(object sender, EventArgs e)
         {
-
-            string firstName = DepFirst_TextBox.Text.Trim();
-            string lastName = DepLast_TextBox.Text.Trim();
-
+            string firstName = DependentFirst_TextBox.Text.Trim();
+            string lastName = DependentLast_TextBox.Text.Trim();
             string Error = NameValidator(firstName, lastName);
+
             if (Error.Length > 0)
             {
                 DependentError_Label.Text = Error;
@@ -125,10 +96,8 @@ namespace PaylocityDeductionCalculator
             else
             {
                 session.AddDependent(firstName, lastName);
-
-                RemoveDependent_Button.Enabled = true;
-                UpdateListBox();
-                UpdateSummary();
+                UpdateDependentsPanel();
+                UpdateSummaryPanel();
                 ClearDependentNameBoxes();
             }
 
@@ -157,17 +126,26 @@ namespace PaylocityDeductionCalculator
        
             }
 
-            if (session.GetDependentCount() <= 0)
-            {
-                RemoveDependent_Button.Enabled = false;
-            }
-
-            UpdateSummary();
-            UpdateListBox();
-
+            UpdateDependentsPanel();
+            UpdateSummaryPanel();
+            
         }
 
+        protected void RemoveAllDependents_Button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                session.RemoveAllDependents();
+            }
+            catch
+            {
 
+            }
+
+            UpdateDependentsPanel();
+            UpdateSummaryPanel();
+            
+        }
 
         public void CartList_RowDataBound(object sender, GridViewRowEventArgs e)
         {
@@ -176,10 +154,9 @@ namespace PaylocityDeductionCalculator
             {
                
                 e.Row.Cells[0].Text = "TOTALS:";
-                e.Row.Cells[1].Text = "" + session.GetAnnualDeductions().ToString("C");
-                e.Row.Cells[2].Text = "" + session.GetPaycheckDeductions().ToString("C");
-
-
+                e.Row.Cells[2].Text = "" + session.GetAnnualDeductions().ToString("C");
+                e.Row.Cells[3].Text = "" + session.GetPaycheckDeductions().ToString("C");
+                
             }
 
         }
@@ -190,8 +167,13 @@ namespace PaylocityDeductionCalculator
         ////////////////////////////////
         /// HELPER METHODS /////////////
         ////////////////////////////////
-
-       
+        
+        private void ResetEmployeePanel()
+        {
+            EE_First_TextBox.Text = "";
+            EE_Last_TextBox.Text = "";
+            SetDefaultPayInfo();
+        }
         /*
          * Autofills Textboxes with information from Business Logic class
          */
@@ -247,10 +229,13 @@ namespace PaylocityDeductionCalculator
         }
 
 
-        private void UpdateSummary()
+        private void UpdateSummaryPanel()
         {
             if (session.isEmployeeSet())
             {
+
+                Summary_Header.InnerText = "Summary for " + session.GetEmployeeName();
+
                 GrossSalary_Label.Text = session.GetAnnualGross().ToString("C");
                 AnnualDeductions_Label.Text = session.GetAnnualDeductions().ToString("C");
                 AnnualTakehome_Label.Text = session.GetAnnualNet().ToString("C");
@@ -265,6 +250,21 @@ namespace PaylocityDeductionCalculator
 
         }
 
+        private void UpdateDependentsPanel()
+        {
+            UpdateListBox();
+
+            if (session.GetDependentCount() <= 0)
+            {
+                RemoveDependent_Button.Enabled = false;
+                RemoveAllDependents_Button.Enabled = false;
+            }else
+            {
+                RemoveDependent_Button.Enabled = true;
+                RemoveAllDependents_Button.Enabled = true;
+            }
+        }
+
         private void UpdateListBox()
         {
             Dependents_ListBox.DataSource = null;
@@ -272,8 +272,59 @@ namespace PaylocityDeductionCalculator
             Dependents_ListBox.DataBind();
         }
 
-#endregion
+        private void EnableEmployeePanel()
+        {
+            EE_First_TextBox.Enabled = true;
+            EE_Last_TextBox.Enabled = true;
+            EE_Error_Label.Text = "";
+            EE_Info_Div.Attributes.CssStyle.Add("opacity", "1.0");
+            SubmitEmployee_Button.Enabled = true;
+        }
 
+        private void DisableEmployeePanel()
+        {
+            EE_First_TextBox.Enabled = false;
+            EE_Last_TextBox.Enabled = false;
+            EE_Error_Label.Text = "";
+            SubmitEmployee_Button.Enabled = false;
+            EE_Info_Div.Attributes.CssStyle.Add("opacity", "0.50");
+        }
+
+        private void EnableDependentsPanel()
+        {
+            ModDependentsDiv.Visible = true;
+            DepFirst_TextBox.Enabled = true;
+            DepLast_TextBox.Enabled = true;
+            Dependents_ListBox.Enabled = true;
+            AddDependent_Button.Enabled = true;
+            
+        }
+
+        private void DisableDependentsPanel()
+        {
+            ModDependentsDiv.Visible = false;
+            DepFirst_TextBox.Enabled = false;
+            DepLast_TextBox.Enabled = false;
+            Dependents_ListBox.Enabled = false;
+            AddDependent_Button.Enabled = false;
+        }
+
+        private void EnableSummaryPanel()
+        {
+            Summary_Container.Visible = true;
+            
+        }
+
+        private void DisableSummaryPanel()
+        {
+            Summary_Container.Visible = false;
+            Summary_Header.InnerText = "Summary";
+        }
+
+
+        #endregion
+
+       
     }
 
 }
