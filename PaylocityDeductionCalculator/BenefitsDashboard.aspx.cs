@@ -13,22 +13,40 @@ namespace PaylocityDeductionCalculator
     public partial class BenefitsDashboard : System.Web.UI.Page
     {
 
+        private static Boolean isEmployeeSet = false;
         private static BusinessLogic session = null;
+        private static int listBoxIndex = -1;
 
         protected void Page_Load(object sender, EventArgs e)
         {
            
-            
             if(session == null || !session.IsEmployeeSet())
             {
                 EnableEmployeePanel();
                 DisableDependentsPanel();
                 DisableSummaryPanel();                
-                session = new Models.BusinessLogic();
+                session = new BusinessLogic();
+            }else
+            {
+                if (isEmployeeSet)
+                {
+                    EE_First_TextBox.Text = session.GetEmployeeFirstName();
+                    EE_Last_TextBox.Text = session.GetEmployeeLastName();
+                    
+                }
+
+
             }
 
-            SetDefaultPayInfo();
-            UpdateSummaryPanel();
+            if (!IsPostBack)
+            {
+                SetDefaultPayInfo();
+                UpdateDependentsPanel();
+                UpdateSummaryPanel();
+            }
+            
+            
+            
             
         }
 
@@ -46,6 +64,7 @@ namespace PaylocityDeductionCalculator
         {
             session = null;
             session = new BusinessLogic();
+            isEmployeeSet = false;
      
             ResetEmployeePanel();
             EnableEmployeePanel();
@@ -69,9 +88,10 @@ namespace PaylocityDeductionCalculator
             }
             else
             {
-                if (!session.IsEmployeeSet())
+                if (!isEmployeeSet)
                 {
-                    session.InitializeEmployee(First, Last);                    
+                    session.InitializeEmployee(First, Last);
+                    isEmployeeSet = true;                
                 }
                 else
                 {
@@ -81,6 +101,7 @@ namespace PaylocityDeductionCalculator
                 DisableEmployeePanel();
                 EnableDependentsPanel();
                 EnableSummaryPanel();
+                UpdateDependentsPanel();
                 UpdateSummaryPanel();
             }
 
@@ -103,6 +124,7 @@ namespace PaylocityDeductionCalculator
             }
             else
             {
+                
                 session.AddDependent(firstName, lastName);
                 UpdateDependentsPanel();
                 UpdateSummaryPanel();
@@ -114,29 +136,32 @@ namespace PaylocityDeductionCalculator
         protected void RemoveDependent_Button_Click(object sender, EventArgs e)
         {
 
+            
             int selectedIndex = Dependents_ListBox.SelectedIndex;
             int listBoxSize = Dependents_ListBox.Items.Count;
 
+            
             try
             {
                 for (int i = 0; i < listBoxSize; i++)
                 {
+                    
                     if (Dependents_ListBox.Items[i].Selected)
                     {
                         session.RemoveDependentAt(i);
-             
+
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                DependentError_Label.Text = ex.Message;
 
-       
             }
+          
 
-            UpdateDependentsPanel();
             UpdateSummaryPanel();
-            
+            UpdateDependentsPanel();
         }
 
         protected void RemoveAllDependents_Button_Click(object sender, EventArgs e)
@@ -242,7 +267,7 @@ namespace PaylocityDeductionCalculator
             if (session.IsEmployeeSet())
             {
 
-                Summary_Header.InnerText = "Summary for " + session.GetEmployeeName();
+                Summary_Header.InnerText = "Summary for " + session.GetEmployeeFirstName() + " " + session.GetEmployeeLastName();
 
                 GrossSalary_Label.Text = session.GetAnnualGross().ToString("C");
                 AnnualDeductions_Label.Text = session.GetAnnualDeductions().ToString("C");
@@ -262,26 +287,37 @@ namespace PaylocityDeductionCalculator
         {
             UpdateListBox();
 
+            DependentError_Label.Text = "";
+
             if (session.GetDependentCount() <= 0)
             {
                 RemoveDependent_Button.Enabled = false;
                 RemoveAllDependents_Button.Enabled = false;
-            }else
+            }
+            else
             {
                 RemoveDependent_Button.Enabled = true;
                 RemoveAllDependents_Button.Enabled = true;
             }
+            
         }
 
         private void UpdateListBox()
         {
             Dependents_ListBox.DataSource = null;
-            Dependents_ListBox.DataSource = session.GetDependentsList();
-            Dependents_ListBox.DataBind();
+            if (isEmployeeSet)
+            {
+                Dependents_ListBox.DataSource = session.GetDependentsList();
+                Dependents_ListBox.DataBind();
+            }
+                
+            
+            
         }
 
         private void EnableEmployeePanel()
         {
+            
             EE_First_TextBox.Enabled = true;
             EE_Last_TextBox.Enabled = true;
             EE_Error_Label.Text = "";
@@ -330,9 +366,16 @@ namespace PaylocityDeductionCalculator
         }
 
 
+
+
         #endregion
 
-       
+        protected void Dependents_ListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DependentError_Label.Text = listBoxIndex.ToString();
+            listBoxIndex = Dependents_ListBox.SelectedIndex;
+            DependentError_Label.Text += " " + listBoxIndex.ToString();
+        }
     }
 
 }

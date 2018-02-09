@@ -43,13 +43,9 @@ namespace PaylocityDeductionCalculator.Models
 
         public void RemoveDependentAt(int i)
         {
-            try
-            {
+            
                 Dependents.RemoveAt(i);
-            }catch
-            {
-
-            }
+            
         }
 
         public void RemoveAllDependents()

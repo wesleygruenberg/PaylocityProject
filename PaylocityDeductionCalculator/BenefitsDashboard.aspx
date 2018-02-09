@@ -89,7 +89,7 @@
                                 <asp:Button ID="AddDependent_Button" runat="server" OnClick="AddDependent_Button_Click" Text="Add Dependent" Width="134px" Enabled="False" />
                                 <br />
                                 <br />
-                                <asp:ListBox ID="Dependents_ListBox" runat="server" Height="119px" ItemType="Dependent" Width="273px" Enabled="False"></asp:ListBox>
+                                <asp:ListBox ID="Dependents_ListBox" runat="server" Height="152px" Width="259px"></asp:ListBox>
                                 <br />
                                 <br />
                                 <asp:Button ID="RemoveDependent_Button" runat="server" OnClick="RemoveDependent_Button_Click" Text="Remove Dependent" Enabled="False" />

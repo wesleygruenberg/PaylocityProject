@@ -18,8 +18,8 @@ namespace PaylocityDeductionCalculator.Models
 
         public BusinessLogic()
         {
-           
 
+            employee = null;
         }
 
         public void InitializeEmployee(string firstName, string lastName)
@@ -74,7 +74,7 @@ namespace PaylocityDeductionCalculator.Models
 
         public List<Dependent> GetDependentsList()
         {
-
+            List<Dependent> dependents = employee.Dependents;
             return employee.Dependents;
         }
 
@@ -98,7 +98,16 @@ namespace PaylocityDeductionCalculator.Models
 
         public int GetDependentCount()
         {
-            return employee.Dependents.Count;
+            int dependentCount = 0;
+
+            try
+            {
+                dependentCount = employee.Dependents.Count;
+            }catch (Exception e)
+            {
+                //employee not initialized
+            }
+            return dependentCount;
         }
 
         public decimal GetAnnualGross()
@@ -155,10 +164,17 @@ namespace PaylocityDeductionCalculator.Models
         {
             return NumPayPeriods;
         }
-        public string GetEmployeeName()
+      
+
+        public string GetEmployeeFirstName()
         {
-            return employee.FirstName + " " + employee.LastName;
+            return employee.FirstName;
         }
+            public string GetEmployeeLastName()
+        {
+            return employee.LastName;
+        }
+        
 
         public void SetEmployeeName(string firstName, string lastName)
         {
