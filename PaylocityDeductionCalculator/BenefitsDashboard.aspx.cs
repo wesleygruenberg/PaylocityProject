@@ -14,28 +14,29 @@ namespace PaylocityDeductionCalculator
     {
 
         private static Boolean isEmployeeSet = false;
-        private static BusinessLogic session = null;
-        private static int listBoxIndex = -1;
+        private static DeductionCalculator session = null;
+        
 
         protected void Page_Load(object sender, EventArgs e)
         {
            
-            if(session == null || !session.IsEmployeeSet())
+            if(session == null || !isEmployeeSet)
             {
+                session = new DeductionCalculator();
                 EnableEmployeePanel();
                 DisableDependentsPanel();
                 DisableSummaryPanel();                
-                session = new BusinessLogic();
+                
             }else
             {
                 if (isEmployeeSet)
                 {
                     EE_First_TextBox.Text = session.GetEmployeeFirstName();
                     EE_Last_TextBox.Text = session.GetEmployeeLastName();
+                    EnableDependentsPanel();
                     
                 }
-
-
+                
             }
 
             if (!IsPostBack)
@@ -44,9 +45,6 @@ namespace PaylocityDeductionCalculator
                 UpdateDependentsPanel();
                 UpdateSummaryPanel();
             }
-            
-            
-            
             
         }
 
@@ -63,7 +61,7 @@ namespace PaylocityDeductionCalculator
         protected void Restart_Button_Click(object sender, EventArgs e)
         {
             session = null;
-            session = new BusinessLogic();
+            session = new DeductionCalculator();
             isEmployeeSet = false;
      
             ResetEmployeePanel();
@@ -124,42 +122,32 @@ namespace PaylocityDeductionCalculator
             }
             else
             {
-                
                 session.AddDependent(firstName, lastName);
                 UpdateDependentsPanel();
                 UpdateSummaryPanel();
                 ClearDependentNameBoxes();
             }
-
         }
         
         protected void RemoveDependent_Button_Click(object sender, EventArgs e)
         {
-
-            
-            int selectedIndex = Dependents_ListBox.SelectedIndex;
             int listBoxSize = Dependents_ListBox.Items.Count;
-
             
             try
             {
                 for (int i = 0; i < listBoxSize; i++)
                 {
-                    
                     if (Dependents_ListBox.Items[i].Selected)
                     {
                         session.RemoveDependentAt(i);
-
                     }
                 }
             }
             catch (Exception ex)
             {
-                DependentError_Label.Text = ex.Message;
-
+                DependentError_Label.Text = "Error removing employee: " + ex.Message;
             }
           
-
             UpdateSummaryPanel();
             UpdateDependentsPanel();
         }
@@ -170,9 +158,9 @@ namespace PaylocityDeductionCalculator
             {
                 session.RemoveAllDependents();
             }
-            catch
+            catch (Exception ex)
             {
-
+                DependentError_Label.Text = "Error removing employee: " + ex.Message;
             }
 
             UpdateDependentsPanel();
@@ -185,13 +173,10 @@ namespace PaylocityDeductionCalculator
 
             if (e.Row.RowType == DataControlRowType.Footer)
             {
-               
                 e.Row.Cells[0].Text = "TOTALS:";
-                e.Row.Cells[2].Text = "" + session.GetAnnualDeductions().ToString("C");
-                e.Row.Cells[3].Text = "" + session.GetPaycheckDeductions().ToString("C");
-                
+                e.Row.Cells[2].Text = session.GetAnnualDeductions().ToString("C");
+                e.Row.Cells[3].Text = session.GetPaycheckDeductions().ToString("C");
             }
-
         }
 
 #endregion
@@ -212,13 +197,14 @@ namespace PaylocityDeductionCalculator
          */
         private void SetDefaultPayInfo()
         {
-
+            //filling values from our constants in the calculator
             PayAmount_TB.Text = session.GetPaycheckAmount().ToString("C");
             NumPeriods_TB.Text = session.GetNumPayPeriods().ToString();
             EECost_TB.Text = session.GetEmployeeCost().ToString("C");
             DepCost_TB.Text = session.GetDependentCost().ToString("C");
             Discount1_TB.Text = session.GetDiscount().ToString("P");
 
+            //using constants in the calculator, disabling text boxes
             PayAmount_TB.Enabled = false;
             NumPeriods_TB.Enabled = false;
             EECost_TB.Enabled = false;
@@ -226,10 +212,7 @@ namespace PaylocityDeductionCalculator
             Discount1_TB.Enabled = false;
         }
 
-
-       
-
-
+        
         private string NameValidator(string FirstName, string LastName)
         {
             string ErrorMessage = "";
@@ -238,7 +221,6 @@ namespace PaylocityDeductionCalculator
             {
                 ErrorMessage += "First Name required \n";
             }
-
             if (LastName == null || LastName.Length == 0)
             {
                 ErrorMessage += " Last Name required \n";
@@ -258,13 +240,12 @@ namespace PaylocityDeductionCalculator
         {
             EE_First_TextBox.Text = "";
             EE_Last_TextBox.Text = "";
-
         }
 
 
         private void UpdateSummaryPanel()
         {
-            if (session.IsEmployeeSet())
+            if (isEmployeeSet)
             {
 
                 Summary_Header.InnerText = "Summary for " + session.GetEmployeeFirstName() + " " + session.GetEmployeeLastName();
@@ -311,8 +292,6 @@ namespace PaylocityDeductionCalculator
                 Dependents_ListBox.DataBind();
             }
                 
-            
-            
         }
 
         private void EnableEmployeePanel()
@@ -370,12 +349,6 @@ namespace PaylocityDeductionCalculator
 
         #endregion
 
-        protected void Dependents_ListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DependentError_Label.Text = listBoxIndex.ToString();
-            listBoxIndex = Dependents_ListBox.SelectedIndex;
-            DependentError_Label.Text += " " + listBoxIndex.ToString();
-        }
     }
 
 }

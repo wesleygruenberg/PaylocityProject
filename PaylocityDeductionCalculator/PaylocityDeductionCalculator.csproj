@@ -401,7 +401,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Benefactor.cs" />
-    <Compile Include="Models\BusinessLogic.cs" />
+    <Compile Include="Models\DeductionCalculator.cs" />
     <Compile Include="Models\Dependent.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\IdentityModels.cs" />

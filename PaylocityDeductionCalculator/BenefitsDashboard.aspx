@@ -112,26 +112,26 @@
                             
                                 <h3>Annual</h3>
                                 <asp:Label ID="Label3" runat="server" Text="Gross Salary:" Width="200px"></asp:Label>
-                                <asp:Label ID="GrossSalary_Label" runat="server"></asp:Label>
+                                <asp:Label class="summary-label" ID="GrossSalary_Label" runat="server" Width="100px"></asp:Label>
                                 <br />
                                 <asp:Label ID="Label5" runat="server" Text="Deductions:" Width="200px"></asp:Label>
-                                <asp:Label ID="AnnualDeductions_Label" runat="server"></asp:Label>
+                                <asp:Label  class="summary-label" ID="AnnualDeductions_Label" runat="server" Width="100px"></asp:Label>
 
                                 <br />
 
                                 <asp:Label ID="Label1" runat="server" Text="Net Takehome: " Width="200px"></asp:Label>
-                                <asp:Label ID="AnnualTakehome_Label" runat="server"></asp:Label>
+                                <asp:Label  class="summary-label" ID="AnnualTakehome_Label" runat="server" Width="100px"></asp:Label>
                                 <br />
                                 <br />
                                 <h3>Pay Period</h3>
                                 <asp:Label ID="Label4" runat="server" Text="Gross Period Pay:" Width="200px"></asp:Label>
-                                <asp:Label ID="GrossPayPeriod_Label" runat="server"></asp:Label>
+                                <asp:Label  class="summary-label" ID="GrossPayPeriod_Label" runat="server" Width="100px"></asp:Label>
                                 <br />
                                 <asp:Label ID="Label6" runat="server" Text="Deductions:" Width="200px"></asp:Label>
-                                <asp:Label ID="PayPeriodDeductions_Label" runat="server"></asp:Label>
+                                <asp:Label  class="summary-label" ID="PayPeriodDeductions_Label" runat="server" Width="100px"></asp:Label>
                                 <br />
                                 <asp:Label ID="Label2" runat="server" Text="Net Takehome:" Width="200px"></asp:Label>
-                                <asp:Label ID="PayPeriodTakehome_Label" runat="server"></asp:Label>
+                                <asp:Label class="summary-label"  ID="PayPeriodTakehome_Label" runat="server" Width="100px"></asp:Label>
                             
                         </section>
                         <br />
@@ -146,6 +146,7 @@
                                 CssClass="table table-striped table-bordered">
                                 <HeaderStyle HorizontalAlign="Left" BackColor="#3D7169" ForeColor="#FFFFFF" />
                                 <FooterStyle HorizontalAlign="Right" BackColor="#6C6B66" ForeColor="#FFFFFF" />
+                                <RowStyle HorizontalAlign ="Right" />
                                 <AlternatingRowStyle BackColor="#F8F8F8" />
                                 <RowStyle BackColor="LightGray" />
                                 <Columns>

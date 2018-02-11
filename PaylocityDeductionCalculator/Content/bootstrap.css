@@ -9283,3 +9283,6 @@ footer .last-child{
     width: 50%;
 }
 
+#Summary_Container .summary-label{
+    text-align: right;
+}
