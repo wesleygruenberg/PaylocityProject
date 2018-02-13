@@ -22,13 +22,14 @@ namespace PaylocityDeductionCalculator.Models
 
         private Employee employee;
       
-
+        /* Constructor */
         public DeductionCalculator()
         {
 
             employee = null;
         }
 
+        /* Initializes a new employee object for calculator to access */
         public void InitializeEmployee(string firstName, string lastName)
         {
             
@@ -42,10 +43,13 @@ namespace PaylocityDeductionCalculator.Models
                 Discount = CalculateDiscount(firstName, lastName),
                 UnitPrice = EmployeeCost
             };
+
             employee.UpdatePrices();
 
         }
 
+        /*Adds a dependent to this calculator's employee based on this
+         * particular problem's inputs and constants */
         public void AddDependent(string firstName, string lastName)
         {
             decimal discount = CalculateDiscount(firstName, lastName);
@@ -62,23 +66,27 @@ namespace PaylocityDeductionCalculator.Models
             employee.AddDependent(dependent);
         }
 
-       
+        /*Wrapper Method: Removes a dependent based on index number from this DeductionCalculator's Employee object */
         public void RemoveDependentAt(int i)
         {
             employee.RemoveDependentAt(i);
         }
 
+        /*Wrapper method: Removes all dependents from the DeductionCalculator's Employee object */
         public void RemoveAllDependents()
         {
             employee.RemoveAllDependents();
         }
 
+        /*Wrapper method: to return a List of the Employee's Dependents */
         public List<Dependent> GetDependentsList()
         {
             List<Dependent> dependents = employee.Dependents;
             return employee.Dependents;
         }
 
+        /*Creates and returns a list of both Employees and Dependents which are Benefactors 
+         */
         public List<Benefactor> GetBenefactorsList()
         {
             List<Benefactor> benefactors = null;
@@ -97,6 +105,7 @@ namespace PaylocityDeductionCalculator.Models
             return benefactors;
         }
 
+        /* Wrapper method to count number of dependents, catches uninitialized list of dependents */
         public int GetDependentCount()
         {
             int dependentCount = 0;
@@ -107,36 +116,42 @@ namespace PaylocityDeductionCalculator.Models
             }catch (Exception ex)
             {
                 //employee not initialized
-                //return zero
+                //return zero 
             }
             return dependentCount;
         }
 
+        #region wrapper getters
         public decimal GetAnnualGross()
         {
             return employee.GetAnnualSalary();
         }
-
+        
+   
         public decimal GetAnnualDeductions()
         {
             return employee.GetAnnualDeductions();
         }
 
+   
         public decimal GetAnnualNet()
         {
             return employee.GetAnnualNet();
         }
 
+ 
         public decimal GetPaycheckGross()
         {
             return employee.GetPaycheckGross();
         }
 
+   
         public decimal GetPaycheckDeductions()
         {
             return employee.GetPaycheckDeductions();
         }
 
+      
         public decimal GetPaycheckNet()
         {
             return employee.GetPaycheckNet();
@@ -176,8 +191,10 @@ namespace PaylocityDeductionCalculator.Models
         {
             return employee.LastName;
         }
-        
 
+        #endregion
+
+        /* Name gets changed, set those names and recalculate discount */
         public void SetEmployeeName(string firstName, string lastName)
         {
             employee.FirstName = firstName;
@@ -185,25 +202,19 @@ namespace PaylocityDeductionCalculator.Models
 
             employee.Discount = CalculateDiscount(firstName, lastName);
 
-
         }
 
-   
-
+        //MOVED LOGIC WITHIN EMPLOYEE CLASS -- TO DELETE
+        /*calculates pay per period based on number of pay periods and unit price 
         private decimal CalculatePeriodPrice(decimal UnitPrice)
         {
 
             return UnitPrice / NumPayPeriods;
 
         }
+        */
 
-        /*
-        private decimal CalculateUnitPrice(decimal BasePrice, decimal Discount)
-        {
-
-            return BasePrice - BasePrice * Discount;
-        }
-*/
+        /* Calculates discount: right now based on A name logic */
         private decimal CalculateDiscount(string firstName, string lastName)
         {
             decimal discount = 0.00m;
@@ -216,8 +227,6 @@ namespace PaylocityDeductionCalculator.Models
 
             return discount;
         }
-
         
-
     }
 }

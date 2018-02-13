@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+
 namespace PaylocityDeductionCalculator.Models
 {
     public class Benefactor
@@ -27,8 +28,11 @@ namespace PaylocityDeductionCalculator.Models
             PeriodPrice = GetPeriodPrice();
         }
 
-        public decimal GetPeriodPrice()
+        public decimal GetPeriodPrice() 
         {
+            if(NumPayPeriods == 0){
+                throw new DivideByZeroException("number of pay periods cannot be zero");
+            }
             return GetAnnualPrice() / NumPayPeriods;
         }
 
@@ -40,7 +44,7 @@ namespace PaylocityDeductionCalculator.Models
 
         public override string ToString()
         {
-            // choose any format that suits you and display what you like
+            
             return String.Format("" + LastName + ", " + FirstName);
         }
 
